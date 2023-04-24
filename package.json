@@ -1,0 +1,20 @@
+{
+  "name": "e-commerce",
+  "version": "1.0.0",
+  "description": "building e-commerce with node express and mongodb",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "author": "Michael",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.4",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.22",
+    "slugify": "^1.6.6"
+  }
+}
