@@ -33,3 +33,11 @@ const OrderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 module.exports = mongoose.model("Order", OrderSchema);
+
+OrderSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "user",
+    select: "name",
+  });
+  next();
+});

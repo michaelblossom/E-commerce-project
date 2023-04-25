@@ -19,7 +19,9 @@ exports.getAllCarts = async (req, res) => {
 // get cart
 exports.getCart = async (req, res) => {
   try {
-    const cart = await Cart.findById(req.params.id);
+    const cart = await Cart.findById(req.params.id).popolate(
+      products.productId
+    );
     res.status(200).json({
       status: "success",
       data: {

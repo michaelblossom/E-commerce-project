@@ -23,3 +23,11 @@ const cartSchema = new mongoose.Schema(
   { timestamps: true }
 );
 module.exports = mongoose.model("Cart", cartSchema);
+
+cartSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "userId",
+    select: "name",
+  });
+  next();
+});

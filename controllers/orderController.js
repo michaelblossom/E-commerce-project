@@ -36,7 +36,9 @@ exports.getAllOrders = async (req, res) => {
 // get ORDER
 exports.getOrder = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id);
+    const order = await Order.findById(req.params.id).populate(
+      products.productId
+    );
     res.status(200).json({
       status: "success",
       data: {
