@@ -6,6 +6,7 @@ const orderRouter = require("./routes/orderRoute");
 
 const app = express();
 app.use(morgan("dev"));
+app.use(express.json({ limit: "10kb" }));
 
 app.use(express.static(`${__dirname}/public`));
 app.use("/api/v1/product", productRouter);

@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
+const slugify = require("slugify");
 const productSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      // required: [true, "product must belong to a title"],
+      required: [true, "product must belong to a title"],
       trim: true,
       maxlength: [
         50,
@@ -18,7 +19,7 @@ const productSchema = new mongoose.Schema(
     slug: String,
     description: {
       type: String,
-      // required: [true, "product must belong to a description"],
+      required: [true, "product must belong to a description"],
     },
     images: [String],
     categories: {
@@ -28,15 +29,15 @@ const productSchema = new mongoose.Schema(
     },
     quantity: {
       type: Number,
-      // required: true,
+      required: [true, "product must a specific quantity"],
     },
-    // averageRating: {
-    //   type: Number,
-    //   default: 5,
-    //   min: [1, "Rating must be above 1.0"],
-    //   max: [10, "Rating must be below 5.0"],
-    //   set: (val) => math.round(val * 10) / 10, //4.6666,4.666,47,4.7
-    // },
+    averageRating: {
+      type: Number,
+      default: 5,
+      min: [1, "Rating must be above 1.0"],
+      max: [10, "Rating must be below 5.0"],
+      set: (val) => Math.round(val * 10) / 10, //4.6666,4.666,47,4.7
+    },
     numberOfRatings: {
       type: Number,
       default: 0,
@@ -49,7 +50,7 @@ const productSchema = new mongoose.Schema(
     color: { type: String },
     price: {
       type: Number,
-      // required: [true, "A product must have a price"],
+      required: [true, "A product must have a price"],
     },
     priceDiscount: {
       type: Number,
@@ -64,4 +65,9 @@ const productSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+productSchema.pre("save", function (next) {
+  this.slug = slugify(this.title, { lower: true }); //slug is a fuield in the schema, name is equally na field in the schema we want to create slug from while {lower:true means that the value of the slug will be in lower case also the value of the slug should be from the name}
+  next();
+});
 module.exports = mongoose.model("Product", productSchema);
