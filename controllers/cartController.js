@@ -1,89 +1,61 @@
 const Cart = require("./../models/cartModel");
+const catchAsync = require("../utils/catchAsync");
+const AppError = require("../utils/appError");
 // get allCart
-exports.getAllCarts = async (req, res) => {
-  try {
-    const allCarts = await Cart.find();
-    res.status(200).json({
-      status: "success",
-      data: {
-        carts: allCarts,
-      },
-    });
-  } catch (error) {
-    res.status(404).json({
-      status: "fail",
-      message: error,
-    });
-  }
-};
+exports.getAllCarts = catchAsync(async (req, res, next) => {
+  const allCarts = await Cart.find();
+  res.status(200).json({
+    status: "success",
+    data: {
+      carts: allCarts,
+    },
+  });
+});
 // get cart
-exports.getCart = async (req, res) => {
-  try {
-    const cart = await Cart.findById(req.params.id).popolate(
-      products.productId
-    );
-    res.status(200).json({
-      status: "success",
-      data: {
-        carts: cart,
-      },
-    });
-  } catch (error) {
-    res.status(404).json({
-      status: "fail",
-      message: error,
-    });
-  }
-};
+exports.getCart = catchAsync(async (req, res, next) => {
+  const cart = await Cart.findById(req.params.id).popolate(products.productId);
+  res.status(200).json({
+    status: "success",
+    data: {
+      carts: cart,
+    },
+  });
+});
 // creating cart
-exports.createCart = async (req, res) => {
-  try {
-    const newCart = await Cart.create(req.body);
-    res.status(201).json({
-      status: "success",
-      data: {
-        cart: newCart,
-      },
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: error,
-    });
-  }
-};
+exports.createCart = catchAsync(async (req, res, next) => {
+  const newCart = await Cart.create(req.body);
+  res.status(201).json({
+    status: "success",
+    data: {
+      cart: newCart,
+    },
+  });
+});
 
-exports.updateCart = async (req, res) => {
-  try {
-    const cart = await Cart.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    res.status(200).json({
-      status: "success",
-      data: {
-        cart,
-      },
-    });
-  } catch (error) {
-    res.status(404).json({
-      status: "fail",
-      message: error,
-    });
+exports.updateCart = catchAsync(async (req, res, next) => {
+  const cart = await Cart.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  if (!cart) {
+    return next(new AppError("No cart found with this ID", 404));
   }
-};
+  res.status(200).json({
+    status: "success",
+    data: {
+      cart,
+    },
+  });
+});
 
-exports.deleteCart = async (req, res) => {
-  try {
-    await Cart.findByIdAndDelete(req.params.id);
-    res.status(204).json({
-      status: "success",
-      data: null,
-    });
-  } catch (error) {
-    res.status(404).json({
-      status: "fail",
-      message: error,
-    });
+exports.deleteCart = catchAsync(async (req, res, next) => {
+  const cart = await Cart.findByIdAndDelete(req.params.id);
+  if (!cart) {
+    return next(new AppError("No cart found with this ID", 404));
   }
-};
+
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});

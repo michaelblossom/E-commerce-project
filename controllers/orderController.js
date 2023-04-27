@@ -1,90 +1,66 @@
 const Order = require("./../models/orderModel");
+const catchAsync = require("../utils/catchAsync");
+const AppError = require("../utils/appError");
 // creating order
-exports.createOrder = async (req, res) => {
-  try {
-    const newOrder = await Order.create(req.body);
-    res.status(201).json({
-      status: "success",
-      data: {
-        order: newOrder,
-      },
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: error,
-    });
-  }
-};
+exports.createOrder = catchAsync(async (req, res, next) => {
+  const newOrder = await Order.create(req.body);
+  res.status(201).json({
+    status: "success",
+    data: {
+      order: newOrder,
+    },
+  });
+});
 // get allOrder
-exports.getAllOrders = async (req, res) => {
-  try {
-    const allOrders = await Order.find();
-    res.status(200).json({
-      status: "success",
-      data: {
-        products: allOrders,
-      },
-    });
-  } catch (error) {
-    res.status(404).json({
-      status: "fail",
-      message: error,
-    });
-  }
-};
+exports.getAllOrders = catchAsync(async (req, res, next) => {
+  const allOrders = await Order.find();
+  res.status(200).json({
+    status: "success",
+    data: {
+      products: allOrders,
+    },
+  });
+});
 // get ORDER
-exports.getOrder = async (req, res) => {
-  try {
-    const order = await Order.findById(req.params.id).populate(
-      products.productId
-    );
-    res.status(200).json({
-      status: "success",
-      data: {
-        orders: order,
-      },
-    });
-  } catch (error) {
-    res.status(404).json({
-      status: "fail",
-      message: error,
-    });
+exports.getOrder = catchAsync(async (req, res, next) => {
+  const order = await Order.findById(req.params.id).populate(
+    products.productId
+  );
+  if (!order) {
+    return next(new AppError("No order found with this ID", 404));
   }
-};
+  res.status(200).json({
+    status: "success",
+    data: {
+      orders: order,
+    },
+  });
+});
 
 // update order
-exports.updateOrder = async (req, res) => {
-  try {
-    const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    res.status(200).json({
-      status: "success",
-      data: {
-        order,
-      },
-    });
-  } catch (error) {
-    res.status(404).json({
-      status: "fail",
-      message: error,
-    });
+exports.updateOrder = catchAsync(async (req, res, next) => {
+  const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  if (!order) {
+    return next(new AppError("No order found with this ID", 404));
   }
-};
+  res.status(200).json({
+    status: "success",
+    data: {
+      order,
+    },
+  });
+});
 
-exports.deleteOrder = async (req, res) => {
-  try {
-    await Order.findByIdAndDelete(req.params.id);
-    res.status(204).json({
-      status: "success",
-      data: null,
-    });
-  } catch (error) {
-    res.status(404).json({
-      status: "fail",
-      message: error,
-    });
+exports.deleteOrder = catchAsync(async (req, res, next) => {
+  const order = await Order.findByIdAndDelete(req.params.id);
+  if (!order) {
+    return next(new AppError("No order found with this ID", 404));
   }
-};
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});
