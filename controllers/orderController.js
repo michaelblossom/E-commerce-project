@@ -23,9 +23,7 @@ exports.getAllOrders = catchAsync(async (req, res, next) => {
 });
 // get ORDER
 exports.getOrder = catchAsync(async (req, res, next) => {
-  const order = await Order.findById(req.params.id).populate(
-    products.productId
-  );
+  const order = await Order.findById(req.params.id);
   if (!order) {
     return next(new AppError("No order found with this ID", 404));
   }

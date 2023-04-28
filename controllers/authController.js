@@ -125,3 +125,21 @@ exports.restrictTo = (...roles) => {
     next();
   };
 };
+
+// updating password
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  // 1)get the user from the collection
+  const user = await User.findById(req.user.id).select("+password");
+  // 2)check if the posted pasted password is correct
+  // calling correctpassword function from usermodel
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+    return next(new AppError("your current password is wrong", 401));
+  }
+  // 3)if so, update the user
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save({ validateBeforeSave: false });
+  // 4)Log user in, send jwt
+  // calling the createAndSendToken function
+  createAndSendToken(user, 200, res);
+});

@@ -20,7 +20,6 @@ const OrderSchema = new mongoose.Schema(
     address: { type: Object, required: true },
     orderStatus: {
       type: String,
-      default: "pending",
       enum: [
         "pending",
         "Cash on Delivery",
@@ -28,6 +27,7 @@ const OrderSchema = new mongoose.Schema(
         "Cancelled",
         "Delivered",
       ],
+      default: "pending",
     },
   },
   { timestamps: true }
