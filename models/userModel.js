@@ -46,13 +46,12 @@ const userSchema = new mongoose.Schema({
 
 // hashing password
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next(); // this line of code simply means that if other fields in the current document such as email, name, etc are modifield excluding the password, the next middleware should run without encripting the password(password should be encripted only when it is modified)
-  this.password = await bcrypt.hash(this.password, 12); //encrypting or hashing the password
-  this.passwordConfirm = undefined; //this will delete password confirm field so that it will not be stored in the database
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 12);
+  this.passwordConfirm = undefined;
   next();
 });
 
-// this query will help us to only get the user that are not deleted(active:true)
 userSchema.pre(/^find/, function (next) {
   this.find({ active: { $ne: false } });
   next();
