@@ -4,7 +4,8 @@
   "description": "building e-commerce with node express and mongodb",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "start:prod": "SET NODE_ENV=production && nodemon server.js"
   },
   "author": "Michael",
   "license": "ISC",
