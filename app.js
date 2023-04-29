@@ -15,4 +15,8 @@ app.use("/api/v1/cart", cartRouter);
 app.use("/api/v1/order", orderRouter);
 app.use("/api/v1/user", userRouter);
 
+// handling undefined route
+app.all("*", (req, res, next) => {
+  next(new AppError(`cant't find ${req.originalUrl} on this saver!`, 404));
+});
 module.exports = app;
