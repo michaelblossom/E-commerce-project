@@ -1,6 +1,6 @@
 const Product = require("./../models/productModel");
-const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
+const catchAsync = require("../utils/catchAsync");
 // get allProduct
 exports.getAllProducts = catchAsync(async (req, res, next) => {
   const allproducts = await Product.find();
@@ -12,7 +12,6 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
     },
   });
 });
-// get product
 exports.getProduct = catchAsync(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
   if (!product) {
@@ -25,12 +24,10 @@ exports.getProduct = catchAsync(async (req, res, next) => {
     },
   });
 });
+
 // creating product
 exports.createProduct = async (req, res, next) => {
   const newProduct = await Product.create(req.body);
-  if (!newProduct) {
-    return next(new AppError("No product found with this ID", 404));
-  }
   res.status(201).json({
     status: "success",
     data: {

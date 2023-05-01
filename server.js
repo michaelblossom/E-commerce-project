@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-dotenv.config({ path: "./.env" }); //to show the path that the config file is located
+dotenv.config({ path: "./config.env" }); //to show the path that the config file is located
 
 const app = require("./app"); //importing app file to the server file
 const DB = process.env.DATABASE.replace(

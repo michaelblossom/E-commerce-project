@@ -1,7 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 
-const AppError = require("./utils/appError"); //which helps in handling undifined route
+const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController"); //global error handler
 const productRouter = require("./routes/productRoute");
 const cartRouter = require("./routes/cartRoute");
@@ -15,6 +15,7 @@ if (process.env.NODE_ENV === "development") {
 app.use(express.json({ limit: "10kb" }));
 
 app.use(express.static(`${__dirname}/public`));
+
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/cart", cartRouter);
 app.use("/api/v1/order", orderRouter);
