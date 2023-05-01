@@ -4,7 +4,7 @@ const productSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: [true, "product must belong to a title"],
+      required: [true, "product have belong to a title"],
       trim: true,
       maxlength: [
         50,

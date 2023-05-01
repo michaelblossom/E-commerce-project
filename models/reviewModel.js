@@ -30,5 +30,16 @@ const reviewSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+reviewSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "product",
+    select: "averageRating numberOfRatings",
+  }).populate({
+    path: "user",
+    select: "name  ",
+  });
+  next();
+});
 const Review = mongoose.model("Review", reviewSchema);
 module.exports = Review;
