@@ -11,13 +11,9 @@ const reviewSchema = new mongoose.Schema(
       min: 1,
       max: 5,
     },
-    createdAt: {
-      type: Date,
-      default: Date.now(),
-    },
 
     //   parent referencing
-    tour: {
+    product: {
       type: mongoose.Schema.ObjectId,
       ref: "Product",
       required: [true, "Review must belong to a product."],
@@ -31,7 +27,8 @@ const reviewSchema = new mongoose.Schema(
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+  },
+  { timestamps: true }
 );
 const Review = mongoose.model("Review", reviewSchema);
 module.exports = Review;

@@ -6,6 +6,7 @@ const globalErrorHandler = require("./controllers/errorController"); //global er
 const productRouter = require("./routes/productRoute");
 const cartRouter = require("./routes/cartRoute");
 const orderRouter = require("./routes/orderRoute");
+// const ratings = require('./')
 const userRouter = require("./routes/userRoute");
 
 const app = express();
