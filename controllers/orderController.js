@@ -16,6 +16,7 @@ exports.getAllOrders = catchAsync(async (req, res, next) => {
   const allOrders = await Order.find();
   res.status(200).json({
     status: "success",
+    result: allOrders.length,
     data: {
       products: allOrders,
     },

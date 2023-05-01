@@ -16,6 +16,7 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
   const allReviews = await Review.find();
   res.status(200).json({
     status: "success",
+    result: allReviews.length,
     data: {
       products: allReviews,
     },

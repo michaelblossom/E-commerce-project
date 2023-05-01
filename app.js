@@ -6,7 +6,7 @@ const globalErrorHandler = require("./controllers/errorController"); //global er
 const productRouter = require("./routes/productRoute");
 const cartRouter = require("./routes/cartRoute");
 const orderRouter = require("./routes/orderRoute");
-// const ratings = require('./')
+const reviewRouter = require("./routes/reviewRoute");
 const userRouter = require("./routes/userRoute");
 
 const app = express();
@@ -21,6 +21,7 @@ app.use("/api/v1/product", productRouter);
 app.use("/api/v1/cart", cartRouter);
 app.use("/api/v1/order", orderRouter);
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/review", reviewRouter);
 
 // handling undefined route
 app.all("*", (req, res, next) => {
