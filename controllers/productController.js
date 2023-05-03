@@ -1,6 +1,9 @@
+// const multer = require("multer");
+// const sharp = require("sharp"); // for image resizing
 const Product = require("./../models/productModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
+
 // get allProduct
 exports.getAllProducts = catchAsync(async (req, res, next) => {
   const allproducts = await Product.find();

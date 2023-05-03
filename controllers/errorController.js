@@ -1,4 +1,5 @@
-// const AppError = require("./../utils/appError");
+
+const AppError = require("./../utils/appError");
 
 // error during development
 const sendErrorDev = (err, res) => {
