@@ -24,6 +24,10 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id; //so that the id of the current user will replace the id coming from the URL(i will attach getOne user middleware function to this middleware in the user route)
+  next();
+};
 // updating current user data
 exports.updateMe = catchAsync(async (req, res, next) => {
   // console.log(req.file);
