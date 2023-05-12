@@ -61,3 +61,16 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
     data: null,
   });
 });
+
+exports.getUser = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    return next(new AppError("No user found with this ID", 404));
+  }
+  res.status(200).json({
+    status: "success",
+    data: {
+      products: product,
+    },
+  });
+});
