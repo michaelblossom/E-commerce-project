@@ -184,7 +184,6 @@ exports.addToWishlist = catchAsync(async (req, res, next) => {
     // return next("product already in wishlist", 401);
     // res.json(user);
   } else {
-    
-    return next("product already in wishlist", 401);
+    return next(new AppError("product already in wishlist", 401));
   }
 });
