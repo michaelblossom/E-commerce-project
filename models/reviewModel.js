@@ -81,7 +81,7 @@ reviewSchema.statics.calcAverageRatings = async function (productId) {
 // we want this function to be called whenever a document is saved therefore we will use a middleware
 reviewSchema.post("save", function () {
   // this points to the current review
-  this.constructor.calcAverageRatings(this.product); // remeber that tour stores the  id of the current tour we are writing review for (the id comes from the URL)
+  this.constructor.calcAverageRatings(this.product); // remeber that product stores the  id of the current tour we are writing review for (the id comes from the URL)
 });
 
 // for deleting and updating review

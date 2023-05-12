@@ -1,9 +1,15 @@
 const express = require("express");
-const productController = require("../controllers/productController");
+const productController = require("./../controllers/productController");
+const authController = require("./../controllers/authController");
+
+// const productController = require("../controllers/productController");
 // const authController = require("./../controller/authController");
 
 const router = express.Router();
-// router.route("/").post(productController.createProduct);
+router
+  .route("/add-to-wishlist")
+  .patch(authController.protect, productController.addToWishlist);
+
 router
   .route("/")
   .get(productController.getAllProducts)

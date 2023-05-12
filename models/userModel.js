@@ -34,6 +34,8 @@ const userSchema = new mongoose.Schema({
       message: "passwords are not the same",
     },
   },
+  wishList: [{ type: mongoose.Schema.ObjectId, ref: "Product" }],
+
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,

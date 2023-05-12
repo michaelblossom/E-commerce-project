@@ -1,8 +1,11 @@
 const express = require("express");
 const orderController = require("../controllers/orderController");
+const authController = require("./../controllers/authController")
 // // const authController = require("./../controller/authController");
 
 const router = express.Router();
+router.get("/myOrders",authController.protect, orderController.getMyOrder);
+
 router
   .route("/")
   .get(orderController.getAllOrders)

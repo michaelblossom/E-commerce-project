@@ -37,7 +37,7 @@ module.exports = mongoose.model("Order", OrderSchema);
 OrderSchema.pre(/^find/, function (next) {
   this.populate({
     path: "user",
-    select: "name",
+    select: "name ", 
   });
   next();
 });

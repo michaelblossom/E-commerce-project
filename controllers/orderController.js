@@ -1,4 +1,5 @@
 const Order = require("./../models/orderModel");
+const Product = require("./../models/productModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 // creating order
@@ -25,10 +26,13 @@ exports.getAllOrders = catchAsync(async (req, res, next) => {
 // get ORDER
 exports.getOrder = catchAsync(async (req, res, next) => {
   const order = await Order.findById(req.params.id).populate(
-    "products.productId"
+    "products..products.productId"
   );
   if (!order) {
-    return next(new AppError("No order found with this ID", 404));
+    const error = new AppError("No order found with this ID", 404);
+
+    // console.log(error.)
+    return next(error);
   }
   res.status(200).json({
     status: "success",
@@ -63,5 +67,24 @@ exports.deleteOrder = catchAsync(async (req, res, next) => {
   res.status(204).json({
     status: "success",
     data: null,
+  });
+});
+
+// get my order
+exports.getMyOrder = catchAsync(async (req, res, next) => {
+  // 1) Find all orders
+  const orders = await Order.find({ user: req.user.id });
+
+  // 2) Find product with the returned IDs
+  const productIDs = orders.map((el) => el.products.productId);
+  console.log(productIDs);
+
+  const product = await Product.find({ id: { $in: productIDs } });
+
+  res.status(204).json({
+    status: "success",
+    data: {
+      products: product,
+    },
   });
 });
