@@ -89,3 +89,62 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
     data: null,
   });
 });
+
+// calculating registered users per month
+// exports.getMonthlyRegisteredUsers = catchAsync(async (req, res, next) => {
+//   const users = await User.aggregate([
+//     {
+//       $project: { month_joined: { $month: "$createdAt" } },
+//       name: "$name",
+//     },
+//     {
+//       $group: {
+//         _id: { month_joined: "$month_joined" },
+//         // names: { $push: "$name" },
+//         names: "$name",
+
+//         number: { $sum: 1 },
+//       },
+//     },
+//     { $sort: { "_id.month_joined": 1 } },
+//   ]);
+//   res.status(200).json({
+//     status: "success",
+//     data: {
+//       User: users,
+//     },
+//   });
+// });
+exports.getMonthlyRegisteredUsers = catchAsync(async (req, res, next) => {
+  const users = await User.aggregate([
+    // {
+    //   $project: {
+    //     month_joined: { $month: "$createdAt" },
+    //     name: "$name",
+    //     _id: 0,
+    //   },
+    // },
+    {
+      $group: {
+        _id: { $month: "$createdAt" },
+        number_of_users_joined: { $sum: 1 },
+        names: { $push: "$name" },
+      },
+    },
+    {
+      $addFields: { month_joined: "$_id" },
+    },
+    { $sort: { _id: 1 } },
+    {
+      $project: {
+        _id: 0,
+      },
+    },
+  ]);
+  res.status(200).json({
+    status: "success",
+    data: {
+      User: users,
+    },
+  });
+});

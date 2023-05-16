@@ -13,6 +13,12 @@ router.get("/me", userController.getMe, userController.getUser);
 // route to block/disable user
 router.delete("/deleteMe", userController.deleteMe);
 
+// get how many users that registered per month
+router.get(
+  "/getMonthlyRegisteredUsers",
+  userController.getMonthlyRegisteredUsers
+);
+
 router.route("/").get(userController.getAllUsers);
 
 router

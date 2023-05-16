@@ -1,50 +1,53 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, "please tell us your name"],
-  },
-  email: {
-    type: String,
-    required: [true, "please provide your email"],
-    unique: true,
-    lowercase: true,
-  },
-  photo: String,
-  role: {
-    type: String,
-    enum: ["user", "admin"],
-    default: "user",
-  },
-  password: {
-    type: String,
-    required: [true, "please provide a password"],
-    minlength: 8,
-    select: false,
-  },
-  passwordConfirm: {
-    type: String,
-    required: [true, "please confirm your password"],
-    validate: {
-      validator: function (el) {
-        return el === this.password;
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "please tell us your name"],
+    },
+    email: {
+      type: String,
+      required: [true, "please provide your email"],
+      unique: true,
+      lowercase: true,
+    },
+    photo: String,
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+    password: {
+      type: String,
+      required: [true, "please provide a password"],
+      minlength: 8,
+      select: false,
+    },
+    passwordConfirm: {
+      type: String,
+      required: [true, "please confirm your password"],
+      validate: {
+        validator: function (el) {
+          return el === this.password;
+        },
+        message: "passwords are not the same",
       },
-      message: "passwords are not the same",
+    },
+    wishList: [{ type: mongoose.Schema.ObjectId, ref: "Product" }],
+
+    passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    active: {
+      type: Boolean,
+      default: true,
+      select: false,
     },
   },
-  wishList: [{ type: mongoose.Schema.ObjectId, ref: "Product" }],
-
-  passwordChangedAt: Date,
-  passwordResetToken: String,
-  passwordResetExpires: Date,
-  active: {
-    type: Boolean,
-    default: true,
-    select: false,
-  },
-});
+  { timestamps: true }
+);
 
 // hashing password
 userSchema.pre("save", async function (next) {
