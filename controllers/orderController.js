@@ -25,9 +25,12 @@ exports.getAllOrders = catchAsync(async (req, res, next) => {
 });
 // get ORDER
 exports.getOrder = catchAsync(async (req, res, next) => {
-  const order = await Order.findById(req.params.id).populate(
-    "products..products.productId"
-  );
+  const order = await Order.findById(req.params.id)
+    .populate({
+      path: "user",
+      select: "name ",
+    })
+  // const order = await Order.findById(req.params.id);
   if (!order) {
     const error = new AppError("No order found with this ID", 404);
 
@@ -103,6 +106,32 @@ exports.getOrdersPerMonth = catchAsync(async (req, res, next) => {
     {
       $addFields: { month_of_order: "$_id" },
     },
+    { $sort: { number_of_orders: -1 } },
+    {
+      $project: {
+        _id: 0,
+      },
+    },
+  ]);
+  res.status(200).json({
+    status: "success",
+    data: {
+      User: users,
+    },
+  });
+});
+
+// user that made the heighest order
+exports.userWithHeighestOrder = catchAsync(async (req, res, next) => {
+  const users = await Order.aggregate([
+    {
+      $group: {
+        _id: "$user",
+        number_of_orders: { $sum: 1 },
+        products: { $push: "$products" },
+      },
+    },
+
     { $sort: { number_of_orders: -1 } },
     {
       $project: {

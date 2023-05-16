@@ -9,6 +9,9 @@ router.get("/myOrders", authController.protect, orderController.getMyOrder);
 // get how many users that registered per month
 router.get("/getOrdersPerMonth", orderController.getOrdersPerMonth);
 
+// user that made the heighest order
+router.get("/userWithHeighestOrder", orderController.userWithHeighestOrder);
+
 router
   .route("/")
   .get(orderController.getAllOrders)
