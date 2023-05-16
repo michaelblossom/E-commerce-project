@@ -1,10 +1,13 @@
 const express = require("express");
 const orderController = require("../controllers/orderController");
-const authController = require("./../controllers/authController")
+const authController = require("./../controllers/authController");
 // // const authController = require("./../controller/authController");
 
 const router = express.Router();
-router.get("/myOrders",authController.protect, orderController.getMyOrder);
+router.get("/myOrders", authController.protect, orderController.getMyOrder);
+
+// get how many users that registered per month
+router.get("/getOrdersPerMonth", orderController.getOrdersPerMonth);
 
 router
   .route("/")

@@ -88,3 +88,32 @@ exports.getMyOrder = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+// get orders per month
+
+exports.getOrdersPerMonth = catchAsync(async (req, res, next) => {
+  const users = await Order.aggregate([
+    {
+      $group: {
+        _id: { $month: "$createdAt" },
+        number_of_orders: { $sum: 1 },
+        products: { $push: "$products" },
+      },
+    },
+    {
+      $addFields: { month_of_order: "$_id" },
+    },
+    { $sort: { number_of_orders: -1 } },
+    {
+      $project: {
+        _id: 0,
+      },
+    },
+  ]);
+  res.status(200).json({
+    status: "success",
+    data: {
+      User: users,
+    },
+  });
+});
