@@ -1,3 +1,4 @@
+const crypto = require("crypto"); //this is a built in function basically use for generating randon strings expecially (passwordreset token)
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
@@ -82,5 +83,21 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   // false means that password not changed
   return false;
 };
+// function to create password reset token
+userSchema.methods.createPasswordResetToken = function () {
+  // cerate a reset token
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  // encrypting the reset token
+  this.passwordResetToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  console.log(resetToken, this.passwordResetToken);
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000; //the time will expire in 10 mins *  60 will convert it to seconds and *1000 to miliseconds
+  return resetToken; //plain resetToken will be returne because it is what will be sent back to the client
+};
+
+
 const User = mongoose.model("User", userSchema);
 module.exports = User;

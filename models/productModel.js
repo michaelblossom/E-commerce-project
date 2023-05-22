@@ -21,7 +21,12 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, "product must belong to a description"],
     },
-    images: [String],
+
+    image: {
+      type: String,
+      // required: [true, "A product must have an image"],
+    },
+    otherImages: [String],
     categories: {
       type: String,
       enum: ["t-shirt", "trouser", "polo", "medium"],
@@ -34,8 +39,6 @@ const productSchema = new mongoose.Schema(
     averageRating: {
       type: Number,
       default: 5,
-      min: [1, "Rating must be above 1.0"],
-      max: [5, "Rating must be below 5.0"],
       set: (val) => Math.round(val * 10) / 10, //4.6666,4.666,47,4.7
     },
     numberOfRatings: {

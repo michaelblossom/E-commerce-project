@@ -1,9 +1,67 @@
-// const multer = require("multer");
-// const sharp = require("sharp"); // for image resizing
+const multer = require("multer");
+const sharp = require("sharp"); // for image resizing
 const Product = require("./../models/productModel");
 const User = require("./../models/userModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
+
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+  // checking if the uploaded file is an image
+  if (file.mimetype.startsWith("image")) {
+    cb(null, true);
+  } else {
+    cb(new AppError("Not an image! please upload only images", 400), false);
+  }
+};
+// configuring multer for use
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+// creating middleware out of the upload
+// we want to upload images to multiple fields
+// maxcount is the maximum image per field
+exports.uploadProductImages = upload.fields([
+  { name: "image", maxCount: 1 }, //imagecover is the name of the field we want to upload the image to
+  { name: "otherImages", maxCount: 3 }, ////images is the name of the field we want to upload the image to
+]);
+
+// upload.array('images',5) req.files //for single field that will recieve many images
+// image processing
+// resizing the images using sharp
+exports.resizeProductImages = catchAsync(async (req, res, next) => {
+  // console.log(req.files);
+  if (!req.files.image || req.files.otherImages) return next();
+
+  //1)image
+  req.body.image = `product-${req.params.id}-${Date.now()}-product.jpeg`; //setting the imageCover field to the image uploaded
+  await sharp(req.files.image[0].buffer)
+    .resize(2000, 1333)
+    .toFormat("jpeg")
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/products/${req.body.image}`);
+
+  // 2)otherImages
+  req.body.otherImages = []; // because otherImages field in our productModel is an array
+
+  await Promise.all(
+    req.files.otherImages.map(async (file, i) => {
+      const filename = `product-${req.params.id}-${Date.now()}-${i + 1}.jpeg`; // creating names for the images
+
+      await sharp(file.buffer)
+        .resize(200, 1333)
+        .toFormat("jpeg")
+        .jpeg({ quality: 90 })
+        .toFile(`public/img/products/${filename}`);
+
+      req.body.otherImages.push(filename); // pusshing the images to images field
+    })
+  );
+  next();
+});
 
 // get allProduct
 exports.getAllProducts = async (req, res, next) => {
